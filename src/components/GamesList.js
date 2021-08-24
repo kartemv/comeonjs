@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { compose } from "redux";
 import { getCategories, getGamesList } from "../services/games";
+import { setGame } from "../redux/reducers/game";
 
 class GamesList extends Component {
 
@@ -49,6 +50,11 @@ class GamesList extends Component {
     })
   };
 
+  startGame = (code) => {
+    this.props.dispatch(setGame(code));
+    this.props.history.push('/game');
+  };
+
   render() {
     const { user: { player } } = this.props;
     const { games, categories, selectedCategoryId, searchName } = this.state;
@@ -81,7 +87,8 @@ class GamesList extends Component {
           </div>
           <div className="four wide column">
             <div className="search ui small icon input ">
-              <input type="text" placeholder="Search Game" onChange={(e) => this.handleChange('searchName', e.target.value)}/>
+              <input type="text" placeholder="Search Game"
+                     onChange={(e) => this.handleChange('searchName', e.target.value)}/>
               <i className="search icon"></i>
             </div>
           </div>
@@ -106,7 +113,8 @@ class GamesList extends Component {
                         {game?.description}
                       </div>
                       <div className="extra">
-                        <div className="play ui right floated secondary button inverted">
+                        <div className="play ui right floated secondary button inverted"
+                             onClick={() => this.startGame(game?.code)}>
                           Play
                           <i className="right chevron icon"></i>
                         </div>
@@ -130,7 +138,7 @@ class GamesList extends Component {
                 <div className="category item" key={category?.id}>
                   <div className="content">
                     <div className="header" onClick={() => this.handleChange('selectedCategoryId', category?.id)}>
-                      { selectedCategoryId === category?.id ? `>${category?.name}<`  : category?.name }
+                      {selectedCategoryId === category?.id ? `>${category?.name}<` : category?.name}
                     </div>
                   </div>
                 </div>

@@ -2,22 +2,17 @@ import React, { Component } from 'react';
 import { signOut } from "../services/auth";
 import { removeUser } from "../redux/reducers/user";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { compose } from "redux";
 
 class GamesList extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: {}
-    }
-  }
 
   logOut = () => {
     const { history, dispatch, user: { username } } = this.props;
 
     signOut(username).then(() => {
-      dispatch(removeUser());
       history.push('/sign-in');
+      dispatch(removeUser());
     })
   };
 
@@ -107,4 +102,7 @@ const mapStateToProps = state => {
     user: state.user,
   }
 };
-export default connect(mapStateToProps)(GamesList);
+export default compose(
+  withRouter,
+  connect(mapStateToProps)
+)(GamesList);

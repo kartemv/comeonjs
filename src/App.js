@@ -1,10 +1,13 @@
 import './App.css';
 import SignIn from "./components/auth/SignIn";
 import React from "react";
-import logo from './images/logo.svg'
+
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import GamesList from "./components/GamesList";
 import Game from "./components/Game";
+import axios from "axios";
+
+axios.defaults.baseURL = 'http://localhost:3001';
 
 function App() {
     return (
@@ -12,7 +15,7 @@ function App() {
 
             <div className="ui one column center aligned page grid">
                 <div className="column twelve wide">
-                    <img src={logo} alt="logo"/>
+                    <img src="/images/logo.svg" alt="logo"/>
                 </div>
             </div>
             <div className="main container">

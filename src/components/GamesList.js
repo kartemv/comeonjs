@@ -13,7 +13,9 @@ class GamesList extends Component {
 
     this.state = {
       games: [],
-      categories: []
+      categories: [],
+      selectedCategoryId: 0,
+      searchName: '',
     }
 
   }
@@ -41,9 +43,20 @@ class GamesList extends Component {
     })
   };
 
+  handleChange = (key, value) => {
+    this.setState({
+      [key]: value
+    })
+  };
+
   render() {
     const { user: { player } } = this.props;
-    const { games, categories } = this.state;
+    const { games, categories, selectedCategoryId, searchName } = this.state;
+
+    const filteredGames = games
+      .filter((game) => !selectedCategoryId || game?.categoryIds?.includes(selectedCategoryId)) // filter by category
+      .filter((game) => !searchName || game?.name?.toLowerCase().includes(searchName.toLowerCase()))
+
     return (
       <div className="casino">
         <div className="ui grid centered">
@@ -68,7 +81,7 @@ class GamesList extends Component {
           </div>
           <div className="four wide column">
             <div className="search ui small icon input ">
-              <input type="text" placeholder="Search Game"/>
+              <input type="text" placeholder="Search Game" onChange={(e) => this.handleChange('searchName', e.target.value)}/>
               <i className="search icon"></i>
             </div>
           </div>
@@ -81,7 +94,7 @@ class GamesList extends Component {
 
               {/* <!-- game item template -->*/}
 
-              {games.map(game => {
+              {filteredGames.map(game => {
                 return (
                   <div className="game item" key={game?.code}>
                     <div className="ui small image">
@@ -116,7 +129,9 @@ class GamesList extends Component {
               {categories.map(category =>
                 <div className="category item" key={category?.id}>
                   <div className="content">
-                    <div className="header">{category?.name}</div>
+                    <div className="header" onClick={() => this.handleChange('selectedCategoryId', category?.id)}>
+                      { selectedCategoryId === category?.id ? `>${category?.name}<`  : category?.name }
+                    </div>
                   </div>
                 </div>
               )}

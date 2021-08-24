@@ -4,8 +4,33 @@ import { removeUser } from "../redux/reducers/user";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { compose } from "redux";
+import { getCategories, getGamesList } from "../services/games";
 
 class GamesList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      games: [],
+      categories: []
+    }
+
+  }
+
+  componentDidMount() {
+    getGamesList()
+      .then(response => {
+        this.setState({ games: response.data })
+      })
+      .catch((e) => console.log('Error retrieving games', e))
+
+    getCategories()
+      .then(response => {
+        this.setState({ categories: response.data })
+      })
+      .catch((e) => console.log('Error retrieving categories', e))
+  }
 
   logOut = () => {
     const { history, dispatch, user: { username } } = this.props;
@@ -18,6 +43,7 @@ class GamesList extends Component {
 
   render() {
     const { user: { player } } = this.props;
+    const { games, categories } = this.state;
     return (
       <div className="casino">
         <div className="ui grid centered">
@@ -54,23 +80,29 @@ class GamesList extends Component {
             <div className="ui relaxed divided game items links">
 
               {/* <!-- game item template -->*/}
-              <div className="game item">
-                <div className="ui small image">
-                  <img src="" alt="game-icon"/>
-                </div>
-                <div className="content">
-                  <div className="header"><b className="name"></b></div>
-                  <div className="description">
-                  </div>
-                  <div className="extra">
-                    <div className="play ui right floated secondary button inverted">
-                      Play
-                      <i className="right chevron icon"></i>
-                    </div>
 
+              {games.map(game => {
+                return (
+                  <div className="game item" key={game?.code}>
+                    <div className="ui small image">
+                      <img src={game?.icon} alt="game-icon"/>
+                    </div>
+                    <div className="content">
+                      <div className="header"><b className="name">{game?.name}</b></div>
+                      <div className="description">
+                        {game?.description}
+                      </div>
+                      <div className="extra">
+                        <div className="play ui right floated secondary button inverted">
+                          Play
+                          <i className="right chevron icon"></i>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                )
+              })}
+
               {/* <!-- end game item template -->*/}
 
             </div>
@@ -81,11 +113,14 @@ class GamesList extends Component {
             <div className="ui selection animated list category items">
 
               {/* <!-- category item template -->*/}
-              <div className="category item">
-                <div className="content">
-                  <div className="header"></div>
+              {categories.map(category =>
+                <div className="category item" key={category?.id}>
+                  <div className="content">
+                    <div className="header">{category?.name}</div>
+                  </div>
                 </div>
-              </div>
+              )}
+
               {/* <!-- end category item template -->*/}
 
             </div>

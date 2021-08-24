@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import SignIn from "./components/auth/SignIn";
+import React from "react";
+import logo from './images/logo.svg'
+import { Route, Switch, BrowserRouter } from "react-router-dom";
+import GamesList from "./components/GamesList";
+import Game from "./components/Game";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+
+            <div className="ui one column center aligned page grid">
+                <div className="column twelve wide">
+                    <img src={logo} alt="logo"/>
+                </div>
+            </div>
+            <div className="main container">
+                <BrowserRouter>
+                    <Switch>
+                        <Route exact path="/" component={GamesList}/>
+                        <Route path="/game" component={Game}/>
+                        <Route path="/sign-in" component={SignIn}/>
+                    </Switch>
+                </BrowserRouter>
+            </div>
+
+        </div>
+    );
 }
 
 export default App;
